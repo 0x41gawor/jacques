@@ -1,0 +1,69 @@
+# =========================
+# Python bytecode / cache
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual environments
+# =========================
+.venv/
+venv/
+ENV/
+env/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Local database / Postgres
+# =========================
+pgdata/
+*.pid
+*.log
+
+# =========================
+# OS / editor junk
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+
+# =========================
+# Tooling / debug dumps
+# =========================
+dumpdir.txt
+tree.txt
+
+# =========================
+# Build / distribution
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Test / coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Secrets (safety net)
+# =========================
+*.pem
+*.key
