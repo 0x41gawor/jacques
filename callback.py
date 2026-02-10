@@ -4,6 +4,11 @@ from flask import Flask, request
 
 from db.executor import PostgresExecutor
 
+from auth.service import issue_auth_tokens
+from db.api import get_db
+from flask import jsonify
+
+
 app = Flask(__name__)
 
 GOOGLE_CLIENT_ID = os.getenv("OAUTH2_CLIENT_GOOGLE_CLIENT_ID")
@@ -121,7 +126,15 @@ def google_callback():
         user = repo.create_user(google_id=google_id, name=name)
         print(f"Created user: {user}")
 
-    return "OKx", 200
+    db = get_db()
+
+    tokens = issue_auth_tokens(
+        user_id=str(user.id),  # UUID → str (JWT sub)
+        db=db,
+    )
+
+    return jsonify(tokens), 200
+
 
 
 if __name__ == "__main__":
