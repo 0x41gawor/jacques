@@ -2,14 +2,14 @@
 from __future__ import annotations
 
 from app.service.exceptions import MissingOAuthCode
-from app.service.google_oauth_client import GoogleOAuthClient
+from app.service.google_oauth_client import GoogleOAuthClientService
 
 
 class OAuthCallbackService:
     def __init__(
         self,
         *,
-        google_oauth: GoogleOAuthClient,
+        google_oauth: GoogleOAuthClientService,
         user_service,
         token_service,
     ):

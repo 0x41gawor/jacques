@@ -10,7 +10,7 @@ from app.db.executor import PostgresExecutor
 from app.repo.users import UserRepository
 from app.repo.refresh_tokens import RefreshTokenRepository
 
-from app.service.google_oauth_client import GoogleOAuthClient
+from app.service.google_oauth_client import GoogleOAuthClientService
 from app.service.oauth_callback import OAuthCallbackService
 from app.service.token import TokenService
 from app.service.user import UserService
@@ -24,7 +24,7 @@ def create_app():
     # --- INFRA / CONFIG ---
     google_client_id = os.environ["OAUTH2_CLIENT_GOOGLE_CLIENT_ID"]
     google_client_secret = os.environ["OAUTH2_CLIENT_GOOGLE_CLIENT_SECRET"]
-    redirect_uri = os.getenv("OAUTH2_REDIRECT_URI", "http://zliczto.pl:5000/auth/google/callback")
+    redirect_uri = os.environ["OAUTH2_REDIRECT_URI"]
 
     db = PostgresExecutor()
 
@@ -33,7 +33,7 @@ def create_app():
     refresh_repo = RefreshTokenRepository(db=db)
 
     # --- SERVICES ---
-    google_oauth = GoogleOAuthClient(
+    google_oauth = GoogleOAuthClientService(
         client_id=google_client_id,
         client_secret=google_client_secret,
         redirect_uri=redirect_uri,

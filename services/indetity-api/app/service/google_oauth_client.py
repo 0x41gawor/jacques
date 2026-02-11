@@ -9,7 +9,7 @@ from google.auth.transport import requests as google_requests
 
 from app.service.exceptions import OAuthExchangeFailed, InvalidIdToken
 
-class GoogleOAuthClient:
+class GoogleOAuthClientService:
     def __init__(
         self,
         *,
