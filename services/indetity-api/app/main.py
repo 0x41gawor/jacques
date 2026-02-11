@@ -1,9 +1,10 @@
 # app/main.py
 from __future__ import annotations
-
 import os
 from dotenv import load_dotenv
 import flask
+
+load_dotenv()   
 
 from app.db.executor import PostgresExecutor
 from app.repo.users import UserRepository
@@ -18,8 +19,6 @@ from app.http.auth_bp import create_auth_blueprint
 
 
 def create_app():
-    load_dotenv()
-
     app = flask.Flask(__name__)
 
     # --- INFRA / CONFIG ---

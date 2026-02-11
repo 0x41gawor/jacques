@@ -10,3 +10,9 @@ class User:
     google_id: str
     name: str | None
     created_at: datetime
+
+@dataclass(frozen=True)
+class RefreshToken:
+    id: UUID
+    user_id: UUID
+    expires_at: datetime
