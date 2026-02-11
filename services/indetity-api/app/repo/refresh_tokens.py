@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from db.protocols import QueryExecutor
+from app.db.protocols import QueryExecutor
 
 
 class RefreshTokenRepository:

@@ -2,7 +2,7 @@
 import time
 import jwt
 
-from auth.config import (
+from app.service.auth.config import (
     JWT_SECRET,
     JWT_ISSUER,
     JWT_ALGORITHM,
