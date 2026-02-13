@@ -132,6 +132,25 @@ class FlashcardBuilder:
     def set_synonyms(self, synonyms: list[str]):
         self.synonyms = synonyms
 
+    @classmethod
+    def from_json(cls, data: dict) -> FlashcardBuilder:
+        builder = cls(data["front"]["word"])
+
+        builder.part = data["front"]["part"]
+        builder.ipa = data["front"]["ipa"]
+
+        builder.definition = data["reverse"]["definition"]
+        builder.translation = data["reverse"]["translation"]
+
+        sentence = data["reverse"]["example"]["sentence"]
+        builder.example_sentence = sentence
+
+        builder.example_position = data["reverse"]["example"]["position"] if "position" in data["reverse"]["example"] else None
+
+        builder.synonyms = data["reverse"]["synonyms"]
+
+        return builder
+
     def build(self) -> Flashcard:
         return Flashcard(
             front=Front(
@@ -149,14 +168,3 @@ class FlashcardBuilder:
                 synonyms=self.synonyms,
             )
         )
-
-
-# TEMP HERE 
-
-import json
-
-def parse_gemini_response(response: dict) -> list[Flashcard]:
-    raw_json = response["candidates"][0]["content"]["parts"][0]["text"]
-    data = json.loads(raw_json)
-
-    return [Flashcard.from_dict(item) for item in data]

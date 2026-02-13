@@ -1,9 +1,10 @@
 import json
+from typing import Iterable
 import httpx
-from typing import List
+import re
 
 from app.protocols import FlashcardGenerator
-from app.service.model.flashcard import Flashcard
+from app.service.model.flashcard import Flashcard, FlashcardBuilder
 
 from .config import SYSTEM_PROMPT
 
@@ -25,7 +26,7 @@ class GeminiFlashcardGenerator(FlashcardGenerator):
         word: str,
         example: str | None = None,
         part: str | None = None,
-    ) -> List[Flashcard]:
+    ) -> list[Flashcard]:
 
         user_payload = {
             "word": word,
@@ -74,17 +75,67 @@ class GeminiFlashcardGenerator(FlashcardGenerator):
         except json.JSONDecodeError as e:
             raise RuntimeError("Gemini returned invalid JSON") from e
 
-        return self._to_entities(flashcards_data)
+        return self._to_entities(flashcards_data, word)
 
     # -------------------------
     # internal mapping layer
     # -------------------------
 
-    def _to_entities(self, flashcards_data: list[dict]) -> List[Flashcard]:
-        return [Flashcard.from_dict(item) for item in flashcards_data]  
+    def _to_entities(self, flashcards_data: list[dict], word: str) -> list[Flashcard]:
+        entities = []
+
+        for item in flashcards_data:
+            builder = FlashcardBuilder.from_json(item)
+            builder.example_position = find_word_position(builder.example_sentence, [builder.word, word])
+            builder.definition = capitalize_first_letter(builder.definition)
+            builder.example_sentence = capitalize_first_letter(builder.example_sentence)
+            entity = builder.build()
+            entities.append(entity)
+
+        return entities
+
 
     def close(self):
         self.client.close()
+
+
+
+def normalize_token(token: str) -> str:
+    return re.sub(r"[^\w'-]", "", token).lower()
+
+
+def find_word_position(sentence: str, candidates: Iterable[str]) -> int:
+    """
+    Returns zero-based index of first matching candidate word/phrase.
+    Supports multi-word expressions.
+    Case-insensitive.
+    Strips punctuation.
+    """
+
+    tokens = sentence.split()
+    normalized_tokens = [normalize_token(t) for t in tokens]
+
+    for candidate in candidates:
+        candidate_parts = [
+            normalize_token(part)
+            for part in candidate.split()
+        ]
+
+        n = len(candidate_parts)
+
+        for i in range(len(normalized_tokens) - n + 1):
+            if normalized_tokens[i:i+n] == candidate_parts:
+                return i
+
+    raise ValueError(
+        f"No candidate {list(candidates)} found in sentence: {sentence}"
+    )
+
+
+def capitalize_first_letter(s: str) -> str:
+    if not s:
+        return s
+    return s[0].upper() + s[1:]
 
 
 if __name__ == "__main__":
@@ -95,7 +146,7 @@ if __name__ == "__main__":
     generator = GeminiFlashcardGenerator(
         google_ai_studio_api_key=os.getenv("GOOGLE_AI_STUDIO_API_KEY")
     )
-    flashcards = generator.generate_flashcard("serendipity", None, None)
+    flashcards = generator.generate_flashcard(word="pervades", example=None, part=None)
 
     for card in flashcards:
         print(card)
