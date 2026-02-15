@@ -4,7 +4,8 @@ import os
 JWT_ISSUER = "jacques.api"
 JWT_ALGORITHM = "HS256"
 
-ACCESS_TOKEN_TTL_SECONDS = 15 * 60          # [s] 15 min
+# ACCESS_TOKEN_TTL_SECONDS = 15 * 60          # [s] 15 min
+ACCESS_TOKEN_TTL_SECONDS = 15 * 60 * 3600       # [s] 30+dni (do testów, w prod powinno być jak wyżej)
 REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 3600  # [s] 30 dni
 
 JWT_SECRET = os.getenv("JACQUES_JWT_SECRET")

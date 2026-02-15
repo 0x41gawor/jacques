@@ -17,7 +17,6 @@ from app.service.user import UserService
 
 from app.http.auth_bp import create_auth_blueprint
 
-
 def create_app():
     app = flask.Flask(__name__)
 
@@ -56,4 +55,5 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = os.environ.get("BANDARI")
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -16,12 +16,12 @@ def create_auth_blueprint(*, oauth_callback_service):
 
         try:
             tokens = oauth_callback_service.handle_callback(code=code, state=state)
-        except MissingOAuthCode:
-            return jsonify({"error": "missing_code_or_state"}), 400
-        except OAuthExchangeFailed:
-            return jsonify({"error": "oauth_exchange_failed"}), 502
-        except InvalidIdToken:
-            return jsonify({"error": "invalid_id_token"}), 401
+        except MissingOAuthCode as e:
+            return jsonify({"error": f"missing_code_or_state {e}"}), 400
+        except OAuthExchangeFailed as e:
+            return jsonify({"error": f"oauth_exchange_failed {e}"}), 502
+        except InvalidIdToken as e:
+            return jsonify({"error": f"invalid_id_token {e}"}), 401
 
         return jsonify(tokens), 200
 
