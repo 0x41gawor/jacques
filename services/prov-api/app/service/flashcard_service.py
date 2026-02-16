@@ -19,7 +19,7 @@ class FlashcardService():
         
         generated = [] 
         try:
-            generated = self.generator.generate_flashcard(word, example, part)
+            generated = self.generator.generate_flashcard(word.lower(), example, part)
         except Exception as e:
             raise RuntimeError(f"Failed to create flashcard: {e}")
         

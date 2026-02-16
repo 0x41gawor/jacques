@@ -116,7 +116,7 @@ def find_word_position(sentence: str, candidates: Iterable[str]) -> int:
 
     for candidate in candidates:
         # 🔥 rozszerzamy candidate o warianty
-        expanded_forms = generate_past_forms(normalize_token(candidate))
+        expanded_forms = generate_surface_forms(normalize_token(candidate))
 
         for form in expanded_forms:
             candidate_parts = form.split()
@@ -136,38 +136,52 @@ def capitalize_first_letter(s: str) -> str:
         return s
     return s[0].upper() + s[1:]
 
-def generate_past_forms(word: str) -> list[str]:
+def generate_surface_forms(word: str) -> set[str]:
     """
-    Very simple regular past tense generator.
-    Not linguistically complete — only pragmatic fallback.
+    Generates simple surface variants:
+    - base
+    - regular plural
+    - regular past
+    - regular 3rd person
+    - -ing
+    Not linguistically complete, but practical fallback.
     """
+
+    forms = {word}
 
     if not word:
-        return []
+        return forms
 
-    forms = [word]
-
-    # ends with 'e' → just add 'd'
-    if word.endswith("e"):
-        forms.append(word + "d")
+    # --- plural ---
+    if word.endswith(("s", "x", "z", "ch", "sh")):
+        forms.add(word + "es")
+    elif word.endswith("y") and len(word) > 1 and word[-2] not in "aeiou":
+        forms.add(word[:-1] + "ies")
     else:
-        forms.append(word + "ed")
+        forms.add(word + "s")
 
-    # optional: consonant doubling heuristic (CVC)
+    # --- past ---
+    if word.endswith("e"):
+        forms.add(word + "d")
+    else:
+        forms.add(word + "ed")
+
+    # consonant doubling (CVC heuristic)
     if (
         len(word) >= 3
         and word[-1] not in "aeiou"
         and word[-2] in "aeiou"
         and word[-3] not in "aeiou"
     ):
-        forms.append(word + word[-1] + "ed")
+        forms.add(word + word[-1] + "ed")
 
-    # optional: y → ied
-    if word.endswith("y") and len(word) >= 2 and word[-2] not in "aeiou":
-        forms.append(word[:-1] + "ied")
+    # --- -ing ---
+    if word.endswith("e") and len(word) > 1:
+        forms.add(word[:-1] + "ing")
+    else:
+        forms.add(word + "ing")
 
-    return list(set(forms))
-
+    return forms
 
 
 if __name__ == "__main__":
