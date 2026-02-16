@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jacques-identity-api"
+name = "jacques-prov-api"
 version = "0.1.0"
 description = "Jacques authentication API service"
 readme = "readme.md"
