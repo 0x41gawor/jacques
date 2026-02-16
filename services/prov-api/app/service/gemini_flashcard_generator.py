@@ -111,21 +111,20 @@ def find_word_position(sentence: str, candidates: Iterable[str]) -> int:
     Case-insensitive.
     Strips punctuation.
     """
-
     tokens = sentence.split()
     normalized_tokens = [normalize_token(t) for t in tokens]
 
     for candidate in candidates:
-        candidate_parts = [
-            normalize_token(part)
-            for part in candidate.split()
-        ]
+        # 🔥 rozszerzamy candidate o warianty
+        expanded_forms = generate_past_forms(normalize_token(candidate))
 
-        n = len(candidate_parts)
+        for form in expanded_forms:
+            candidate_parts = form.split()
+            n = len(candidate_parts)
 
-        for i in range(len(normalized_tokens) - n + 1):
-            if normalized_tokens[i:i+n] == candidate_parts:
-                return i
+            for i in range(len(normalized_tokens) - n + 1):
+                if normalized_tokens[i:i+n] == candidate_parts:
+                    return i
 
     raise ValueError(
         f"No candidate {list(candidates)} found in sentence: {sentence}"
@@ -136,6 +135,39 @@ def capitalize_first_letter(s: str) -> str:
     if not s:
         return s
     return s[0].upper() + s[1:]
+
+def generate_past_forms(word: str) -> list[str]:
+    """
+    Very simple regular past tense generator.
+    Not linguistically complete — only pragmatic fallback.
+    """
+
+    if not word:
+        return []
+
+    forms = [word]
+
+    # ends with 'e' → just add 'd'
+    if word.endswith("e"):
+        forms.append(word + "d")
+    else:
+        forms.append(word + "ed")
+
+    # optional: consonant doubling heuristic (CVC)
+    if (
+        len(word) >= 3
+        and word[-1] not in "aeiou"
+        and word[-2] in "aeiou"
+        and word[-3] not in "aeiou"
+    ):
+        forms.append(word + word[-1] + "ed")
+
+    # optional: y → ied
+    if word.endswith("y") and len(word) >= 2 and word[-2] not in "aeiou":
+        forms.append(word[:-1] + "ied")
+
+    return list(set(forms))
+
 
 
 if __name__ == "__main__":

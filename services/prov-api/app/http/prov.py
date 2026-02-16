@@ -18,7 +18,7 @@ def create_prov_blueprint(*, flashcard_service):
             return jsonify({"error": "Missing required query param: word"}), 400
 
         try:
-            flashcards = flashcard_service.create_flashcard(word, example, part)
+            flashcards = flashcard_service.create_flashcard(user_id, word, example, part)
 
             # na razie tylko “echo” w odpowiedzi, żebyś widział że działa
             return jsonify({
