@@ -22,4 +22,4 @@
 
 ## Architektura v2
 
-![](_readme/arch2.drawio.svg)
+![](_readme/arch2.drawio.png)
