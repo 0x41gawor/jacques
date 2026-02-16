@@ -9,6 +9,8 @@ load_dotenv()
 from app.db.executor import PostgresExecutor
 from app.repo.users import UserRepository
 from app.repo.refresh_tokens import RefreshTokenRepository
+from app.repo.decks import DeckRepository
+
 
 from app.service.google_oauth_client import GoogleOAuthClientService
 from app.service.oauth_callback import OAuthCallbackService
@@ -30,6 +32,7 @@ def create_app():
     # --- REPOS ---
     user_repo = UserRepository(db=db)
     refresh_repo = RefreshTokenRepository(db=db)
+    deck_repo = DeckRepository(db=db)
 
     # --- SERVICES ---
     google_oauth = GoogleOAuthClientService(
@@ -37,8 +40,13 @@ def create_app():
         client_secret=google_client_secret,
         redirect_uri=redirect_uri,
     )
-    user_service = UserService(user_repo=user_repo)
-    token_service = TokenService(refresh_repo=refresh_repo)
+    user_service = UserService(
+        user_repo=user_repo,
+        deck_repo=deck_repo,
+    )
+    token_service = TokenService(
+        refresh_repo=refresh_repo
+    )
 
     oauth_callback_service = OAuthCallbackService(
         google_oauth=google_oauth,
