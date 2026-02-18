@@ -1,14 +1,23 @@
 APP_NAME=jacques-identity-api
 PORT?=$(BANDARI)
 
+.PHONY: build run dev docker-build docker-run docker-stop docker-restart
+
+# ---------- LOCAL ----------
+
 build:
-	pip install -e .
+	pip install ../../common
+	pip install .
 
 run:
-	python -m app.main
+	python3 -m app.main
+
+dev: build run
+
+# ---------- DOCKER ----------
 
 docker-build:
-	docker build -t $(APP_NAME):latest .
+	docker build -f Dockerfile -t $(APP_NAME):latest ../..
 
 docker-run:
 	docker run -d --name $(APP_NAME) \

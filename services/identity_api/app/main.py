@@ -6,6 +6,11 @@ import flask
 
 load_dotenv()   
 
+from common.logging.config import configure_logging
+from common.logging.mixin import LoggingMixin
+
+configure_logging()
+
 from app.db.executor import PostgresExecutor
 from app.repo.users import UserRepository
 from app.repo.refresh_tokens import RefreshTokenRepository
@@ -17,7 +22,7 @@ from app.service.oauth_callback import OAuthCallbackService
 from app.service.token import TokenService
 from app.service.user import UserService
 
-from app.http.auth_bp import create_auth_blueprint
+from app.http.auth_bp import AuthBlueprint
 
 def create_app():
     app = flask.Flask(__name__)
@@ -55,8 +60,11 @@ def create_app():
     )
 
     # --- HTTP ---
-    auth_bp = create_auth_blueprint(oauth_callback_service=oauth_callback_service)
-    app.register_blueprint(auth_bp)
+    auth_http = AuthBlueprint(
+        oauth_callback_service=oauth_callback_service
+    )
+
+    app.register_blueprint(auth_http.blueprint())
 
     return app
 
