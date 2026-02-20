@@ -9,3 +9,6 @@ class OAuthExchangeFailed(Exception):
 
 class InvalidIdToken(Exception):
     pass
+
+class InvalidRefreshToken(Exception):
+    pass

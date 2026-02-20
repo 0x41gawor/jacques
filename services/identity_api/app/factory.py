@@ -57,7 +57,8 @@ def create_app():
 
     # --- HTTP ---
     auth_http = AuthBlueprint(
-        oauth_callback_service=oauth_callback_service
+        oauth_callback_service=oauth_callback_service,
+        token_service=token_service,
     )
 
     # --- HTTP request logging ---

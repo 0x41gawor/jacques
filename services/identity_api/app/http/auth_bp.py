@@ -10,11 +10,13 @@ from app.service.exceptions import (
     MissingOAuthCode,
     OAuthExchangeFailed,
     InvalidIdToken,
+    InvalidRefreshToken
 )
 
 class AuthBlueprint(LoggingMixin):
-    def __init__(self, *, oauth_callback_service):
+    def __init__(self, *, oauth_callback_service, token_service):
         self._oauth_callback_service = oauth_callback_service
+        self._token_service = token_service
 
         self._bp = Blueprint("auth", __name__, url_prefix="/auth")
         self._register_routes()
@@ -31,6 +33,17 @@ class AuthBlueprint(LoggingMixin):
             "/google/callback",
             view_func=self.google_callback,
             methods=["GET"],
+        )
+        self._bp.add_url_rule(
+            "/refresh",
+            view_func=self.refresh,
+            methods=["POST"],
+        )
+
+        self._bp.add_url_rule(
+            "/logout",
+            view_func=self.logout,
+            methods=["POST"],
         )
 
     # -------------------------
@@ -78,3 +91,28 @@ class AuthBlueprint(LoggingMixin):
         self.logger.info("OAuth callback successful")
 
         return jsonify(tokens), 200
+
+    def refresh(self):
+        data = request.get_json(silent=True) or {}
+        refresh_token = data.get("refresh_token")
+
+        if not refresh_token:
+            return jsonify({"error": "missing_refresh_token"}), 400
+
+        try:
+            tokens = self._token_service.refresh(refresh_token=refresh_token)
+        except InvalidRefreshToken:
+            return jsonify({"error": "invalid_refresh_token"}), 401
+
+        return jsonify(tokens), 200
+    
+    def logout(self):
+        data = request.get_json(silent=True) or {}
+        refresh_token = data.get("refresh_token")
+
+        if not refresh_token:
+            return jsonify({"error": "missing_refresh_token"}), 400
+
+        self._token_service.logout(refresh_token=refresh_token)
+
+        return "", 204
