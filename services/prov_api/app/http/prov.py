@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request, g
-from app.http.auth import require_auth
-
+from app.http.decorators import require_auth
 def create_prov_blueprint(*, flashcard_service):
     prov_bp = Blueprint("prov", __name__, url_prefix="/prov")
 

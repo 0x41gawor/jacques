@@ -1,10 +1,8 @@
 # auth/crypto.py
 import hashlib
 import hmac
-import os
 
 from app.service.auth.config import REFRESH_TOKEN_PEPPER
-
 
 def hash_refresh_token(token: str) -> str:
     """

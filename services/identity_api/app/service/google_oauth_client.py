@@ -35,6 +35,7 @@ class GoogleOAuthClientService:
 
         return self._verify_id_token(id_token_str)
 
+    @trace
     def _exchange_code_for_tokens(self, code: str) -> dict:
         payload = {
             "client_id": self._client_id,
@@ -55,7 +56,8 @@ class GoogleOAuthClientService:
             return response.json()
         except Exception as e:
             raise OAuthExchangeFailed(str(e)) from e
-
+        
+    @trace
     def _verify_id_token(self, id_token_str: str) -> dict:
         try:
             req = google_requests.Request()

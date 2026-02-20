@@ -2,13 +2,14 @@ from uuid import UUID
 from typing import Optional
 
 from common.db.protocols import QueryExecutor
+from common.logging.trace import trace
 from .models import Deck
 
 
 class DeckRepository:
     def __init__(self, db: QueryExecutor):
         self._db = db
-
+    @trace
     def find_default_by_user_id(self, user_id: UUID) -> Optional[Deck]:
         rows = self._db.query(
             """
@@ -32,7 +33,7 @@ class DeckRepository:
             is_default=row[3],
             created_at=row[4],
         )
-
+    @trace
     def find_by_user_id(self, user_id: UUID) -> list[Deck]:
         rows = self._db.query(
             """

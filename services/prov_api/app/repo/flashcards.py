@@ -3,13 +3,15 @@ from uuid import UUID
 from datetime import datetime
 
 from common.db.protocols import QueryExecutor
+from common.logging.trace import trace
 from app.service.model.flashcard import Flashcard
 
 
 class FlashcardRepository:
     def __init__(self, db: QueryExecutor):
         self._db = db
-
+        
+    @trace
     def insert(
         self,
         *,

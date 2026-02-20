@@ -2,6 +2,7 @@ from uuid import UUID
 from .model.flashcard import Flashcard
 from app.protocols import FlashcardGenerator
 
+from common.logging.trace import trace
 from app.service.deck import DeckService
 from app.repo.flashcards import FlashcardRepository
 
@@ -11,6 +12,7 @@ class FlashcardService():
         self.deck_service = deck_service
         self.flashcard_repo = flashcard_repo
 
+    @trace
     def create_flashcard(self, user_id: UUID, word: str, example: str | None, part: str | None) -> list[Flashcard]:
         try:
             deck = self.deck_service.get_default_deck_by_user_id(user_id)

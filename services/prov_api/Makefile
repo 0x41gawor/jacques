@@ -9,8 +9,7 @@ build:
 	pip install ../../common
 
 run:
-	pwd
-	python3 -m app.main
+	python3 -m app.main --log-level=DEBUG
 
 dev: build run
 

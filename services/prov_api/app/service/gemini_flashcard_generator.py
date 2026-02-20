@@ -3,6 +3,7 @@ from typing import Iterable
 import httpx
 import re
 
+from common.logging.trace import trace
 from app.protocols import FlashcardGenerator
 from app.service.model.flashcard import Flashcard, FlashcardBuilder
 
@@ -20,7 +21,8 @@ class GeminiFlashcardGenerator(FlashcardGenerator):
     def __init__(self, google_ai_studio_api_key: str):
         self.api_key = google_ai_studio_api_key
         self.client = httpx.Client(timeout=30.0)
-
+    
+    @trace
     def generate_flashcard(
         self,
         word: str,
