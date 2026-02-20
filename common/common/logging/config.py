@@ -49,3 +49,5 @@ def configure_logging(level=logging.INFO):
     root = logging.getLogger()
     root.setLevel(level)
     root.handlers = [handler]
+    # wyciszenie werkzeug
+    logging.getLogger("werkzeug").setLevel(logging.WARNING)

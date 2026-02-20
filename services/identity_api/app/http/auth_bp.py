@@ -12,7 +12,6 @@ from app.service.exceptions import (
     InvalidIdToken,
 )
 
-
 class AuthBlueprint(LoggingMixin):
     def __init__(self, *, oauth_callback_service):
         self._oauth_callback_service = oauth_callback_service
@@ -37,7 +36,6 @@ class AuthBlueprint(LoggingMixin):
     # -------------------------
     # Handlers
     # -------------------------
-    @trace
     def google_callback(self):
         code = request.args.get("code")
         state = request.args.get("state")

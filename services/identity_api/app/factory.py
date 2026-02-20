@@ -3,6 +3,11 @@ import os
 import flask
 
 from common.db.executor import PostgresExecutor
+from common.logging.http import register_request_logging
+from common.health.flask import create_health_blueprint
+from common.health.base import HealthRegistry
+from common.health.database import DatabaseHealthCheck
+
 from app.repo.users import UserRepository
 from app.repo.refresh_tokens import RefreshTokenRepository
 from app.repo.decks import DeckRepository
@@ -55,6 +60,13 @@ def create_app():
         oauth_callback_service=oauth_callback_service
     )
 
+    # --- HTTP request logging ---
+    register_request_logging(app)
+    # --- HEALTH CHECKS ---
+    health_registry = HealthRegistry()
+    health_registry.register(DatabaseHealthCheck(db))
+    app.register_blueprint(create_health_blueprint(registry=health_registry))
+    # --- API BLUEPRINTS ---
     app.register_blueprint(auth_http.blueprint())
 
     return app

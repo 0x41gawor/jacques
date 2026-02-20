@@ -100,6 +100,34 @@ class GeminiFlashcardGenerator(FlashcardGenerator):
     def close(self):
         self.client.close()
 
+    def ping(self, timeout: float = 2.0) -> None:
+        """
+        Lightweight readiness check.
+        Raises RuntimeError if Gemini is not reachable.
+        """
+
+        body = {
+            "contents": [{
+                "role": "user",
+                "parts": [{"text": "ping"}],
+            }],
+            "generationConfig": {
+                "maxOutputTokens": 1,
+            }
+        }
+
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                response = client.post(
+                    GEMINI_ENDPOINT,
+                    params={"key": self.api_key},
+                    json=body,
+                )
+
+            response.raise_for_status()
+
+        except Exception as e:
+            raise RuntimeError(f"Gemini unreachable: {e}") from e
 
 
 def normalize_token(token: str) -> str:
