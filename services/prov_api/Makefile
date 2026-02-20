@@ -7,9 +7,9 @@ PORT?=$(TOKARI)
 
 build:
 	pip install ../../common
-	pip install .
 
 run:
+	pwd
 	python3 -m app.main
 
 dev: build run

@@ -4,13 +4,15 @@ from psycopg.errors import UniqueViolation
 from .exceptions import UserAlreadyExists
 
 from common.db.protocols import QueryExecutor
+from common.logging.trace import trace
+
 from .models import User
 
 
 class UserRepository:
     def __init__(self, db: QueryExecutor):
         self._db = db
-
+    @trace
     def find_by_google_id(self, google_id: str) -> Optional[User]:
         rows = self._db.query(
             """
@@ -33,7 +35,7 @@ class UserRepository:
             name=row[2],
             created_at=row[3],
         )
-
+    @trace
     def create_user(self, google_id: str, name: str | None) -> User:
         try:
             rows = self._db.query(

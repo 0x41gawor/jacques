@@ -4,6 +4,8 @@ from __future__ import annotations
 import os
 import requests
 
+from common.logging.trace import trace
+
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -22,7 +24,8 @@ class GoogleOAuthClientService:
         self._client_secret = client_secret
         self._redirect_uri = redirect_uri
         self._token_url = token_url
-
+    
+    @trace
     def exchange_and_verify(self, code: str) -> dict:
         token_response = self._exchange_code_for_tokens(code)
 

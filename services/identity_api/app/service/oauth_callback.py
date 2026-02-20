@@ -1,6 +1,8 @@
 # app/service/oauth_callback.py
 from __future__ import annotations
 
+from common.logging.trace import trace
+
 from app.service.exceptions import MissingOAuthCode
 from app.service.google_oauth_client import GoogleOAuthClientService
 
@@ -16,7 +18,8 @@ class OAuthCallbackService:
         self._google_oauth = google_oauth
         self._user_service = user_service
         self._token_service = token_service
-
+    
+    @trace
     def handle_callback(self, *, code: str | None, state: str | None) -> dict:
         if not code or not state:
             raise MissingOAuthCode("missing code or state")

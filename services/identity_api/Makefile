@@ -7,10 +7,10 @@ PORT?=$(BANDARI)
 
 build:
 	pip install ../../common
-	pip install .
 
 run:
-	python3 -m app.main
+	pwd
+	python3 -m app.main --log-level DEBUG
 
 dev: build run
 

@@ -4,13 +4,14 @@ from typing import Optional
 from uuid import UUID
 
 from common.db.protocols import QueryExecutor
+from common.logging.trace import trace
 from .models import RefreshToken
 
 
 class RefreshTokenRepository:
     def __init__(self, db: QueryExecutor):
         self._db = db
-
+    @trace
     def insert(
         self,
         *,

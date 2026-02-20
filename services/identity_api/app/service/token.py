@@ -4,6 +4,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 import secrets
 
+from common.logging.trace import trace
+
 from app.service.auth.jwt import issue_access_token
 from app.service.auth.crypto import hash_refresh_token
 from app.service.auth.config import REFRESH_TOKEN_TTL_SECONDS, ACCESS_TOKEN_TTL_SECONDS
@@ -13,6 +15,7 @@ class TokenService:
     def __init__(self, *, refresh_repo):
         self._refresh_repo = refresh_repo
 
+    @trace
     def issue_tokens(self, *, user_id: str) -> dict:
         refresh_token = secrets.token_urlsafe(64)
         refresh_token_hash = hash_refresh_token(refresh_token)

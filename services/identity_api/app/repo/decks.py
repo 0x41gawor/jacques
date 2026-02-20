@@ -1,13 +1,15 @@
 from uuid import UUID
 
 from common.db.protocols import QueryExecutor
+from common.logging.trace import trace
+
 from .models import Deck
 
 
 class DeckRepository:
     def __init__(self, db: QueryExecutor):
         self._db = db
-
+    @trace
     def insert_default(self, *, owner_id: UUID) -> Deck:
         rows = self._db.query(
             """

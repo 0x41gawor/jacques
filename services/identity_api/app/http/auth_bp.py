@@ -4,6 +4,8 @@ from __future__ import annotations
 from flask import Blueprint, jsonify, request
 from common.logging.mixin import LoggingMixin
 
+from common.logging.trace import trace
+
 from app.service.exceptions import (
     MissingOAuthCode,
     OAuthExchangeFailed,
@@ -35,7 +37,7 @@ class AuthBlueprint(LoggingMixin):
     # -------------------------
     # Handlers
     # -------------------------
-
+    @trace
     def google_callback(self):
         code = request.args.get("code")
         state = request.args.get("state")
