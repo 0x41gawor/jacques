@@ -11,7 +11,7 @@ from common.logging.mixin import LoggingMixin
 
 configure_logging()
 
-from app.db.executor import PostgresExecutor
+from common.db.executor import PostgresExecutor
 from app.repo.users import UserRepository
 from app.repo.refresh_tokens import RefreshTokenRepository
 from app.repo.decks import DeckRepository

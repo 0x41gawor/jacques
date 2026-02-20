@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import Optional
 
-from app.db.protocols import QueryExecutor
+from common.db.protocols import QueryExecutor
 from .models import Deck
 
 

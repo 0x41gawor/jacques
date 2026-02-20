@@ -2,7 +2,7 @@ import json
 from uuid import UUID
 from datetime import datetime
 
-from app.db.protocols import QueryExecutor
+from common.db.protocols import QueryExecutor
 from app.service.model.flashcard import Flashcard
 
 

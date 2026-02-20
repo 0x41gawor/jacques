@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from app.db.protocols import QueryExecutor
+from common.db.protocols import QueryExecutor
 from .models import Deck
 
 

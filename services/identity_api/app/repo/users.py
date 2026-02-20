@@ -3,7 +3,7 @@ from typing import Optional
 from psycopg.errors import UniqueViolation
 from .exceptions import UserAlreadyExists
 
-from app.db.protocols import QueryExecutor
+from common.db.protocols import QueryExecutor
 from .models import User
 
 

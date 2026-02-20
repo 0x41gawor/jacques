@@ -4,11 +4,15 @@ import flask
 
 load_dotenv()
 
-from app.db.executor import PostgresExecutor
+from common.logging.config import configure_logging
+from common.logging.mixin import LoggingMixin
+configure_logging()
+
+from common.db.executor import PostgresExecutor
+
 from app.repo.decks import DeckRepository
 from app.repo.flashcards import FlashcardRepository
 from app.service.deck import DeckService
-
 
 from app.http.prov import create_prov_blueprint
 from app.service.flashcard_service import FlashcardService
