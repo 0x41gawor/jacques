@@ -3,8 +3,7 @@ from app.http.decorators import require_auth
 def create_prov_blueprint(*, flashcard_service):
     prov_bp = Blueprint("prov", __name__, url_prefix="/prov")
 
-    # //TODO GET dla Natki, żeby mogła z przeglądarki wejść :D Usunąć potem.
-    @prov_bp.route("/flashcard", methods=["GET", "POST"])
+    @prov_bp.route("/flashcard", methods=["POST"])
     @require_auth
     def create_flashcard():
         user_id = g.user_id  # UUID

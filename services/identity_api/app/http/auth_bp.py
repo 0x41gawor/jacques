@@ -13,12 +13,12 @@ from app.service.exceptions import (
     InvalidRefreshToken
 )
 
-class AuthBlueprint(LoggingMixin):
+class SessionBlueprint(LoggingMixin):
     def __init__(self, *, oauth_callback_service, token_service):
         self._oauth_callback_service = oauth_callback_service
         self._token_service = token_service
 
-        self._bp = Blueprint("auth", __name__, url_prefix="/auth")
+        self._bp = Blueprint("session", __name__, url_prefix="/session")
         self._register_routes()
 
     def blueprint(self) -> Blueprint:

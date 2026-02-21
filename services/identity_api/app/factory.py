@@ -18,7 +18,7 @@ from app.service.oauth_callback import OAuthCallbackService
 from app.service.token import TokenService
 from app.service.user import UserService
 
-from app.http.auth_bp import AuthBlueprint
+from app.http.auth_bp import SessionBlueprint
 
 def create_app():
     app = flask.Flask(__name__)
@@ -56,18 +56,22 @@ def create_app():
     )
 
     # --- HTTP ---
-    auth_http = AuthBlueprint(
+    # ---- API PREFIX ---
+    api_bp = flask.Blueprint("api", __name__, url_prefix="/api/v1")
+    # --- AUTH BLUEPRINT ---
+    auth_http = SessionBlueprint(
         oauth_callback_service=oauth_callback_service,
         token_service=token_service,
     )
-
     # --- HTTP request logging ---
-    register_request_logging(app)
+    register_request_logging(api_bp)
     # --- HEALTH CHECKS ---
     health_registry = HealthRegistry()
     health_registry.register(DatabaseHealthCheck(db))
-    app.register_blueprint(create_health_blueprint(registry=health_registry))
+    api_bp.register_blueprint(create_health_blueprint(registry=health_registry))
     # --- API BLUEPRINTS ---
-    app.register_blueprint(auth_http.blueprint())
+    api_bp.register_blueprint(auth_http.blueprint())
+
+    app.register_blueprint(api_bp)
 
     return app
