@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, g
 from app.http.decorators import require_auth
 def create_prov_blueprint(*, flashcard_service):
-    prov_bp = Blueprint("prov", __name__, url_prefix="/prov")
+    prov_bp = Blueprint("prov", __name__, url_prefix="/flashcards")
 
-    @prov_bp.route("/flashcard", methods=["POST"])
+    @prov_bp.route("/generate", methods=["POST"])
     @require_auth
     def create_flashcard():
         user_id = g.user_id  # UUID

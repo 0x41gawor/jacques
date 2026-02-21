@@ -34,17 +34,20 @@ def create_app():
         deck_service=deck_service,
         flashcard_repo=flashcard_repo
     )
-
+    # --- HTTP ---
+    # ---- API PREFIX ---
+    api_bp = flask.Blueprint('api', __name__, url_prefix='/api/v1')
     # --- HTTP request logging ---
-    register_request_logging(app)
+    register_request_logging(api_bp)
     # --- HEALTH CHECKS ---
     health_registry = HealthRegistry()
     health_registry.register(DatabaseHealthCheck(db))
     health_registry.register(GeminiHealthCheck(flashcard_generator))
-    app.register_blueprint(create_health_blueprint(registry=health_registry))
+    api_bp.register_blueprint(create_health_blueprint(registry=health_registry))
     # --- API BLUEPRINTS ---
     prov_bp = create_prov_blueprint(flashcard_service=flashcard_service)
 
-    app.register_blueprint(prov_bp)
+    api_bp.register_blueprint(prov_bp)
+    app.register_blueprint(api_bp)
 
     return app
