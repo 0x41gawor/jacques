@@ -5,13 +5,11 @@ PORT?=$(TOKARI)
 
 # ---------- LOCAL ----------
 
-build:
-	pip install ../../common
-
 run:
+	pwd
 	python3 -m app.main --log-level=DEBUG
 
-dev: build run
+dev: run
 
 # ---------- DOCKER ----------
 
