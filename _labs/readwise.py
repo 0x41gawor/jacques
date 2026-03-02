@@ -118,4 +118,7 @@ if __name__ == "__main__":
     date_from = read_date(raw_from)
     date_to = read_date(raw_to)
 
+    print(date_from)
+    print(date_to)
+
     fetch_and_insert(date_from, date_to)
