@@ -1,5 +1,5 @@
-from .protocols import QueryExecutor
-from .executor import PostgresExecutor
+from .db.protocols import QueryExecutor
+from .db.executor import PostgresExecutor
 
 __all__ = [
     "QueryExecutor",

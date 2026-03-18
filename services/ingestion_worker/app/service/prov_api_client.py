@@ -28,7 +28,33 @@ class ProvApiService(LoggingMixin):
             },
             timeout=30,
         )
-        response.raise_for_status()
+
+        if not response.ok:
+            response_text = response.text[:2000]
+
+            self.logger.error(
+                "Prov-api returned error response",
+                extra={
+                    "word": word,
+                    "status_code": response.status_code,
+                    "response_text": response_text,
+                },
+            )
+
+            try:
+                response_json = response.json()
+                self.logger.error(
+                    "Prov-api error response JSON",
+                    extra={
+                        "word": word,
+                        "status_code": response.status_code,
+                        "response_json": response_json,
+                    },
+                )
+            except Exception:
+                pass
+
+            response.raise_for_status()
 
         self.logger.info(
             "Flashcard generation request completed",

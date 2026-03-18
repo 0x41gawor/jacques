@@ -59,7 +59,7 @@ class IngestionRunner(LoggingMixin):
 
                 date_from = (
                     source.last_synced_at
-                    or datetime(2020, 1, 1, tzinfo=timezone.utc)
+                    or datetime(2026, 3, 17, tzinfo=timezone.utc)
                 ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
                 date_to = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")

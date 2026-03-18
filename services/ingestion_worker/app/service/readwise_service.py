@@ -35,8 +35,8 @@ class ReadwiseService(LoggingMixin, ExternalSourceService):
             params = {
                 "page": page,
                 "page_size": 1000,
-                "date_from": date_from,
-                "date_to": date_to,
+                "updated_gt": date_from,
+                "updated_lt": date_to,
             }
 
             r = requests.get(
