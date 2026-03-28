@@ -1,7 +1,7 @@
-APP_NAME=ingestion-worker
-PORT?=$(BANDARI)
+APP_NAME=jacques-ingestion-worker
+PORT?=$(POTEU)
 
-.PHONY: build run dev docker-build docker-run docker-stop docker-restart
+.PHONY: build run dev docker-build docker-run docker-stop docker-restart docker-logs docker-shell
 
 # ---------- LOCAL ----------
 
@@ -10,3 +10,32 @@ run:
 	python3 -m app.main --log-level DEBUG
 
 dev: run
+
+# ---------- DOCKER ----------
+
+docker-build:
+	docker build -f Dockerfile -t $(APP_NAME):latest ../..
+
+docker-run:
+	docker run -d --name $(APP_NAME) \
+		--restart unless-stopped \
+		--add-host=host.docker.internal:host-gateway \
+		-p $(PORT):5000 \
+		--env-file ../../.env \
+		--env NOME \
+		--env AGANDSKODE \
+		--env THAREUX \
+		--env DB_HOST=host.docker.internal \
+		$(APP_NAME):latest
+
+docker-stop:
+	docker stop $(APP_NAME) || true
+	docker rm $(APP_NAME) || true
+
+docker-restart: docker-stop docker-run
+
+docker-logs:
+	docker logs -f $(APP_NAME)
+
+docker-shell:
+	docker exec -it $(APP_NAME) /bin/bash
