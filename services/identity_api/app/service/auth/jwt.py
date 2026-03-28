@@ -8,7 +8,7 @@ from app.service.auth.config import (
     ACCESS_TOKEN_TTL_SECONDS,
 )
 
-INTERNAL_ACCESS_TOKEN_TTL_SECONDS = 300
+INTERNAL_ACCESS_TOKEN_TTL_SECONDS = 3600 # 1 hour
 
 
 def issue_access_token(user_id: str) -> str:

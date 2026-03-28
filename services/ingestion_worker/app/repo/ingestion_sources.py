@@ -63,6 +63,29 @@ class IngestionSourceRepository:
         )
 
     @trace
+    def mark_partial_success(
+        self,
+        *,
+        source_id: UUID,
+        synced_at: datetime,
+        next_sync_at: datetime,
+        error: str,
+    ) -> None:
+        self._db.execute(
+            """
+            UPDATE ingestion_sources
+            SET
+                last_synced_at = %s,
+                next_sync_at = %s,
+                last_status = 'partial',
+                last_error = %s,
+                updated_at = now()
+            WHERE id = %s
+            """,
+            (synced_at, next_sync_at, error[:1000], source_id),
+        )
+
+    @trace
     def mark_failure(
         self,
         *,

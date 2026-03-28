@@ -52,6 +52,7 @@ def main() -> None:
         readwise_service=readwise_service,
         identity_api_client=identity_api_service,
         prov_api_client=prov_api_service,
+        max_attempts_per_word=cfg.max_attempts_per_word,
     )
 
     while True:
