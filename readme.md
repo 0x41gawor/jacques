@@ -1,7 +1,7 @@
 ![](__readme__/logo.png)
 
 <p align="center">
-  <i>A zero-touch, spaced repetition app that learns you English</i
+  <i>A zero-touch, spaced repetition app that learns you the English language</i
 </p>
 
 # Zen of Jacques
