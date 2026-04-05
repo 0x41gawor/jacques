@@ -54,13 +54,14 @@ CREATE TABLE flashcards (
 );
 
 CREATE TABLE flashcard_state (
-    flashcard_id   UUID PRIMARY KEY REFERENCES flashcards(id) ON DELETE CASCADE,
-    interval       INTEGER NOT NULL,
-    ease_factor    NUMERIC(4,2) NOT NULL,
-    next_review_at TIMESTAMPTZ NOT NULL,
-    last_result    TEXT,
-    created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+    flashcard_id    UUID PRIMARY KEY REFERENCES flashcards(id) ON DELETE CASCADE,
+    n_recalls       INTEGER NOT NULL DEFAULT 0,
+    interval        INTEGER NOT NULL,
+    ease_factor     NUMERIC(4,2) NOT NULL,
+    next_review_at  TIMESTAMPTZ NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
 -- indeks pod spaced repetition
 CREATE INDEX idx_flashcard_state_next_review
 ON flashcard_state(next_review_at);
@@ -96,6 +97,6 @@ CREATE TABLE ingestion_sources (
     source_type     TEXT NOT NULL,         -- 'readwise'
     credential_json JSONB NOT NULL,
     is_active       BOOLEAN NOT NULL DEFAULT true,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     last_synced_at  TIMESTAMPTZ NOT NULL DEFAULT '2020-01-01'
 );
