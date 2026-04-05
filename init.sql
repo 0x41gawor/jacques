@@ -89,3 +89,13 @@ WHERE revoked_at IS NULL;
 --      INSERT do flashcards i opcjonalnie INSERT do flashcard_state
 -- Logout 
     -- UPDATE refresh_tokens SET revoked_at = now() WHERE id = :token_id;
+
+CREATE TABLE ingestion_sources (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id         UUID NOT NULL,
+    source_type     TEXT NOT NULL,         -- 'readwise'
+    credential_json JSONB NOT NULL,
+    is_active       BOOLEAN NOT NULL DEFAULT true,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    last_synced_at  TIMESTAMPTZ NOT NULL DEFAULT '2020-01-01'
+);
